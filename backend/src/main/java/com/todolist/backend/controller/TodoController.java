@@ -2,7 +2,6 @@ package com.todolist.backend.controller;
 
 import com.todolist.backend.model.Todo;
 import com.todolist.backend.service.TodoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +13,11 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 public class TodoController {
     
-    @Autowired
-    private TodoService todoService;
+    private final TodoService todoService;
+    
+    public TodoController(TodoService todoService) {
+        this.todoService = todoService;
+    }
     
     @GetMapping
     public ResponseEntity<List<Todo>> getAllTodos(@RequestParam(required = false) Boolean completed) {
