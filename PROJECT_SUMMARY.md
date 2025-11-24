@@ -16,7 +16,7 @@ This is a full-stack TodoList application developed as a final project for Objec
 ### Backend
 - **Framework**: Spring Boot 3.2.0
 - **Language**: Java 17
-- **Build Tool**: Maven
+- **Build Tool**: Gradle
 - **ORM**: Hibernate (JPA)
 - **API Style**: RESTful
 
@@ -237,7 +237,7 @@ todolist-app/
 │   │   │   └── resources/
 │   │   │       └── application.properties  # Configuration
 │   │   └── test/                # Unit tests
-│   └── pom.xml                  # Maven dependencies
+│   └── build.gradle             # Gradle dependencies
 │
 ├── frontend/                     # React frontend
 │   ├── src/

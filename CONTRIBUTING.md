@@ -54,8 +54,8 @@ This document explains how to extend and modify the TodoList application.
 
 ```bash
 cd backend
-mvn test                    # Run all tests
-mvn spring-boot:run        # Start the server
+./gradlew test              # Run all tests
+./gradlew bootRun          # Start the server
 ```
 
 ## Frontend Structure (React + Vite)
