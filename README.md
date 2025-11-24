@@ -45,9 +45,21 @@ Before running this application, make sure you have the following installed:
 - **Java 17** or higher
 - **Maven 3.6+** 
 - **Node.js 18+** and **npm**
-- **MySQL 8.0+**
+- **MySQL 8.0+** (or Docker to run MySQL in a container)
 
 ## 🗄️ Database Setup
+
+### Option 1: Using Docker (Recommended)
+
+The easiest way to run MySQL is using Docker:
+
+```bash
+docker-compose up -d
+```
+
+This will start MySQL on port 3306 with the database `todolist_db` already created.
+
+### Option 2: Manual MySQL Installation
 
 1. Install and start MySQL server
 
@@ -65,7 +77,30 @@ Before running this application, make sure you have the following installed:
 
 ## 🚀 Running the Application
 
-### Backend (Spring Boot)
+### Quick Start
+
+For the easiest setup experience, use the provided shell scripts:
+
+1. **Start the database** (if using Docker):
+   ```bash
+   docker-compose up -d
+   ```
+
+2. **Start the backend** (in one terminal):
+   ```bash
+   ./start-backend.sh
+   ```
+
+3. **Start the frontend** (in another terminal):
+   ```bash
+   ./start-frontend.sh
+   ```
+
+4. Open your browser at `http://localhost:5173`
+
+### Manual Setup
+
+#### Backend (Spring Boot)
 
 1. Navigate to the backend directory:
    ```bash
@@ -85,7 +120,7 @@ Before running this application, make sure you have the following installed:
 
 3. The backend server will start at `http://localhost:8080`
 
-### Frontend (React + Vite)
+#### Frontend (React + Vite)
 
 1. Navigate to the frontend directory:
    ```bash
