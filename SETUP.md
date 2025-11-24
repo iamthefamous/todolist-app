@@ -59,7 +59,7 @@ Open a terminal and run:
 Or manually:
 ```bash
 cd backend
-mvn spring-boot:run
+./gradlew bootRun
 ```
 
 Wait for the message: "Started TodoListBackendApplication"
@@ -187,8 +187,8 @@ docker-compose up -d
 #### Backend:
 ```bash
 cd backend
-mvn clean package
-java -jar target/todolist-backend-1.0.0.jar
+./gradlew clean build
+java -jar build/libs/todolist-backend-1.0.0.jar
 ```
 
 #### Frontend:

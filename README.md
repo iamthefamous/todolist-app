@@ -27,7 +27,7 @@ todolist-app/
 │   │       │   └── service/       # Business logic
 │   │       └── resources/
 │   │           └── application.properties
-│   └── pom.xml                # Maven dependencies
+│   └── build.gradle           # Gradle dependencies
 │
 └── frontend/                  # Vite + React frontend
     ├── src/
@@ -43,7 +43,7 @@ todolist-app/
 Before running this application, make sure you have the following installed:
 
 - **Java 17** or higher
-- **Maven 3.6+** 
+- **Gradle 8.5+** (or use the included Gradle wrapper)
 - **Node.js 18+** and **npm**
 - **MySQL 8.0+** (or Docker to run MySQL in a container)
 
@@ -109,13 +109,13 @@ For the easiest setup experience, use the provided shell scripts:
 
 2. Build and run the application:
    ```bash
-   mvn spring-boot:run
+   ./gradlew bootRun
    ```
    
    Or build the JAR and run it:
    ```bash
-   mvn clean package
-   java -jar target/todolist-backend-1.0.0.jar
+   ./gradlew clean build
+   java -jar build/libs/todolist-backend-1.0.0.jar
    ```
 
 3. The backend server will start at `http://localhost:8080`
@@ -191,7 +191,7 @@ For the easiest setup experience, use the provided shell scripts:
 - **Spring Boot 3.2.0** - Backend framework
 - **Spring Data JPA** - Data access layer
 - **Hibernate** - ORM framework
-- **Maven** - Dependency management
+- **Gradle** - Build tool and dependency management
 
 ### Database
 - **MySQL 8.0** - Relational database
@@ -235,7 +235,7 @@ For the easiest setup experience, use the provided shell scripts:
 **Database connection errors:**
 - Verify MySQL service is running
 - Check database name and credentials
-- Ensure MySQL driver is included in `pom.xml`
+- Ensure MySQL driver is included in `build.gradle`
 
 ## 👨‍💻 Author
 
