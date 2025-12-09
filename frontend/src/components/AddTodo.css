@@ -72,3 +72,29 @@
 .btn-cancel-add:hover {
   background-color: #e0e0e0;
 }
+
+.priority-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.priority-selector label {
+  font-weight: 600;
+  color: #555;
+}
+
+.priority-select {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: white;
+}
+
+.priority-select:focus {
+  outline: none;
+  border-color: #2196F3;
+}

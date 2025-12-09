@@ -5,20 +5,23 @@ function AddTodo({ onAdd }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [deadline, setDeadline] = useState('');
+  const [priority, setPriority] = useState('MEDIUM');
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (title.trim()) {
+    if (title.trim() && deadline) {
       onAdd({
         title: title.trim(),
         description: description.trim(),
-        deadline: deadline ? new Date(deadline).toISOString() : null,
+        deadline: new Date(deadline).toISOString(),
+        priority: priority,
         completed: false
       });
       setTitle('');
       setDescription('');
       setDeadline('');
+      setPriority('MEDIUM');
       setIsExpanded(false);
     }
   };
@@ -50,9 +53,22 @@ function AddTodo({ onAdd }) {
               type="datetime-local"
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
-              placeholder="Deadline (optional)"
+              placeholder="Deadline (required)"
               className="todo-input"
+              required
             />
+            <div className="priority-selector">
+              <label>Priority:</label>
+              <select
+                value={priority}
+                onChange={(e) => setPriority(e.target.value)}
+                className="priority-select"
+              >
+                <option value="HIGH">🔴 High</option>
+                <option value="MEDIUM">🟢 Medium</option>
+                <option value="LOW">🔵 Low</option>
+              </select>
+            </div>
             <div className="form-actions">
               <button type="submit" className="btn-add">Add Todo</button>
               <button 
@@ -62,6 +78,7 @@ function AddTodo({ onAdd }) {
                   setTitle('');
                   setDescription('');
                   setDeadline('');
+                  setPriority('MEDIUM');
                 }}
                 className="btn-cancel-add"
               >
