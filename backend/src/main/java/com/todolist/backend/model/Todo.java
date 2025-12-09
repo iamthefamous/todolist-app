@@ -37,10 +37,12 @@ public class Todo {
     
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"todos", "groups", "password"})
     private User user;
     
     @ManyToOne
     @JoinColumn(name = "group_id")
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"todos", "members"})
     private Group group;
     
     @ManyToMany
@@ -49,6 +51,7 @@ public class Todo {
         joinColumns = @JoinColumn(name = "todo_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"todos", "groups", "password"})
     private Set<User> assignedUsers = new HashSet<>();
     
     @PrePersist

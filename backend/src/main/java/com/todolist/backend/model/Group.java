@@ -1,12 +1,13 @@
 package com.todolist.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "groups")
+@Table(name = "`groups`")
 public class Group {
     
     @Id
@@ -29,6 +30,7 @@ public class Group {
     private Set<User> members = new HashSet<>();
     
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Todo> todos = new HashSet<>();
     
     @Column(name = "created_at", nullable = false, updatable = false)

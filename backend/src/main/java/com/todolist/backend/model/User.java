@@ -1,5 +1,6 @@
 package com.todolist.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ public class User {
     private String username;
     
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
     
     @Column(nullable = false, unique = true)
@@ -26,9 +28,11 @@ public class User {
     private LocalDateTime createdAt;
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Todo> todos = new HashSet<>();
     
     @ManyToMany(mappedBy = "members")
+    @JsonIgnore
     private Set<Group> groups = new HashSet<>();
     
     @PrePersist
