@@ -20,10 +20,14 @@ public class TodoController {
     }
     
     @GetMapping
-    public ResponseEntity<List<Todo>> getAllTodos(@RequestParam(required = false) Boolean completed) {
+    public ResponseEntity<List<Todo>> getAllTodos(
+            @RequestParam(required = false) Boolean completed,
+            @RequestParam(required = false) String sortBy) {
         try {
             List<Todo> todos;
-            if (completed != null) {
+            if ("deadline".equals(sortBy)) {
+                todos = todoService.getTodosSortedByDeadline();
+            } else if (completed != null) {
                 todos = todoService.getTodosByStatus(completed);
             } else {
                 todos = todoService.getAllTodos();

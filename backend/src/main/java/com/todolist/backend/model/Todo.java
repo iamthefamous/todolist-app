@@ -26,6 +26,9 @@ public class Todo {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
+    @Column(name = "deadline")
+    private LocalDateTime deadline;
+    
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -93,5 +96,13 @@ public class Todo {
     
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+    
+    public LocalDateTime getDeadline() {
+        return deadline;
+    }
+    
+    public void setDeadline(LocalDateTime deadline) {
+        this.deadline = deadline;
     }
 }

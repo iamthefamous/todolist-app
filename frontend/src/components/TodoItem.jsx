@@ -5,6 +5,9 @@ function TodoItem({ todo, onUpdate, onDelete }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editDescription, setEditDescription] = useState(todo.description || '');
+  const [editDeadline, setEditDeadline] = useState(
+    todo.deadline ? new Date(todo.deadline).toISOString().slice(0, 16) : ''
+  );
 
   const handleToggleComplete = () => {
     onUpdate(todo.id, {
@@ -18,7 +21,8 @@ function TodoItem({ todo, onUpdate, onDelete }) {
       onUpdate(todo.id, {
         ...todo,
         title: editTitle,
-        description: editDescription
+        description: editDescription,
+        deadline: editDeadline ? new Date(editDeadline).toISOString() : null
       });
       setIsEditing(false);
     }
@@ -27,7 +31,20 @@ function TodoItem({ todo, onUpdate, onDelete }) {
   const handleCancelEdit = () => {
     setEditTitle(todo.title);
     setEditDescription(todo.description || '');
+    setEditDeadline(
+      todo.deadline ? new Date(todo.deadline).toISOString().slice(0, 16) : ''
+    );
     setIsEditing(false);
+  };
+
+  const formatDeadline = (deadline) => {
+    if (!deadline) return null;
+    const date = new Date(deadline);
+    const now = new Date();
+    const isOverdue = date < now && !todo.completed;
+    const formattedDate = date.toLocaleDateString();
+    const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return { text: `${formattedDate} ${formattedTime}`, isOverdue };
   };
 
   if (isEditing) {
@@ -47,6 +64,13 @@ function TodoItem({ todo, onUpdate, onDelete }) {
           placeholder="Description (optional)"
           rows="2"
         />
+        <input
+          type="datetime-local"
+          value={editDeadline}
+          onChange={(e) => setEditDeadline(e.target.value)}
+          className="edit-input"
+          placeholder="Deadline (optional)"
+        />
         <div className="edit-actions">
           <button onClick={handleSaveEdit} className="btn-save">Save</button>
           <button onClick={handleCancelEdit} className="btn-cancel">Cancel</button>
@@ -54,6 +78,8 @@ function TodoItem({ todo, onUpdate, onDelete }) {
       </div>
     );
   }
+
+  const deadlineInfo = formatDeadline(todo.deadline);
 
   return (
     <div className={`todo-item ${todo.completed ? 'completed' : ''}`}>
@@ -68,6 +94,12 @@ function TodoItem({ todo, onUpdate, onDelete }) {
           <h3 className="todo-title">{todo.title}</h3>
           {todo.description && (
             <p className="todo-description">{todo.description}</p>
+          )}
+          {deadlineInfo && (
+            <p className={`todo-deadline ${deadlineInfo.isOverdue ? 'overdue' : ''}`}>
+              📅 {deadlineInfo.text}
+              {deadlineInfo.isOverdue && ' (Overdue!)'}
+            </p>
           )}
         </div>
       </div>
