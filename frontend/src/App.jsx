@@ -9,16 +9,19 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all'); // all, active, completed
+  const [sortByDeadline, setSortByDeadline] = useState(false);
 
   useEffect(() => {
     loadTodos();
-  }, []);
+  }, [sortByDeadline]);
 
   const loadTodos = async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await todoService.getAllTodos();
+      const data = sortByDeadline 
+        ? await todoService.getTodosSortedByDeadline()
+        : await todoService.getAllTodos();
       setTodos(data);
     } catch (err) {
       setError('Failed to load todos. Please make sure the backend server is running.');
@@ -109,6 +112,17 @@ function App() {
           >
             Completed ({completedCount})
           </button>
+        </div>
+
+        <div className="sort-options">
+          <label>
+            <input
+              type="checkbox"
+              checked={sortByDeadline}
+              onChange={(e) => setSortByDeadline(e.target.checked)}
+            />
+            Sort by Deadline
+          </label>
         </div>
 
         {loading ? (

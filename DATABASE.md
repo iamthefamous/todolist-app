@@ -16,6 +16,7 @@ This table stores all todo items with their details and status.
 | completed | BOOLEAN | NOT NULL, DEFAULT FALSE | Status of the todo (true=completed, false=active) |
 | created_at | DATETIME | NOT NULL | Timestamp when todo was created |
 | updated_at | DATETIME | NOT NULL | Timestamp when todo was last updated |
+| deadline | DATETIME | NULL | Optional deadline for the todo item |
 
 #### SQL Schema
 
@@ -27,8 +28,10 @@ CREATE TABLE todos (
     completed BOOLEAN NOT NULL DEFAULT FALSE,
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL,
+    deadline DATETIME,
     INDEX idx_completed (completed),
-    INDEX idx_created_at (created_at)
+    INDEX idx_created_at (created_at),
+    INDEX idx_deadline (deadline)
 );
 ```
 
@@ -37,15 +40,16 @@ CREATE TABLE todos (
 - **Primary Key**: `id` - For fast lookups by ID
 - **Index**: `completed` - For filtering by completion status
 - **Index**: `created_at` - For ordering by creation time
+- **Index**: `deadline` - For sorting by deadline
 
 #### Example Data
 
 ```sql
-INSERT INTO todos (title, description, completed, created_at, updated_at) 
+INSERT INTO todos (title, description, completed, created_at, updated_at, deadline) 
 VALUES 
-    ('Learn Spring Boot', 'Complete Spring Boot tutorial with JPA', FALSE, NOW(), NOW()),
-    ('Build React App', 'Create a React application with Vite', FALSE, NOW(), NOW()),
-    ('Setup MySQL', 'Install and configure MySQL database', TRUE, NOW(), NOW());
+    ('Learn Spring Boot', 'Complete Spring Boot tutorial with JPA', FALSE, NOW(), NOW(), '2025-12-15 18:00:00'),
+    ('Build React App', 'Create a React application with Vite', FALSE, NOW(), NOW(), '2025-12-20 12:00:00'),
+    ('Setup MySQL', 'Install and configure MySQL database', TRUE, NOW(), NOW(), NULL);
 ```
 
 ## Entity Relationships
@@ -83,6 +87,9 @@ public class Todo {
     
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    
+    @Column(name = "deadline")
+    private LocalDateTime deadline;
     
     @PrePersist
     protected void onCreate() {
@@ -149,4 +156,14 @@ SELECT * FROM todos WHERE title LIKE '%Spring%' ORDER BY created_at DESC;
 ### Count todos by status
 ```sql
 SELECT completed, COUNT(*) as count FROM todos GROUP BY completed;
+```
+
+### Get todos sorted by deadline (upcoming first)
+```sql
+SELECT * FROM todos ORDER BY deadline ASC;
+```
+
+### Get overdue todos
+```sql
+SELECT * FROM todos WHERE deadline < NOW() AND completed = FALSE ORDER BY deadline ASC;
 ```

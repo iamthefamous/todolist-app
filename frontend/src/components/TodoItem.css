@@ -55,6 +55,18 @@
   white-space: pre-wrap;
 }
 
+.todo-deadline {
+  margin: 5px 0 0 0;
+  font-size: 13px;
+  color: #2196F3;
+  font-weight: 500;
+}
+
+.todo-deadline.overdue {
+  color: #f44336;
+  font-weight: 600;
+}
+
 .todo-actions {
   display: flex;
   gap: 8px;

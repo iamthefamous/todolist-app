@@ -43,6 +43,7 @@ public class TodoService {
         todo.setTitle(todoDetails.getTitle());
         todo.setDescription(todoDetails.getDescription());
         todo.setCompleted(todoDetails.getCompleted());
+        todo.setDeadline(todoDetails.getDeadline());
         
         return todoRepository.save(todo);
     }
@@ -55,5 +56,9 @@ public class TodoService {
     
     public void deleteAllTodos() {
         todoRepository.deleteAll();
+    }
+    
+    public List<Todo> getTodosSortedByDeadline() {
+        return todoRepository.findAllByOrderByDeadlineAsc();
     }
 }

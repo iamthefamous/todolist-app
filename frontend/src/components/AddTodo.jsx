@@ -4,6 +4,7 @@ import './AddTodo.css';
 function AddTodo({ onAdd }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [deadline, setDeadline] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleSubmit = (e) => {
@@ -12,10 +13,12 @@ function AddTodo({ onAdd }) {
       onAdd({
         title: title.trim(),
         description: description.trim(),
+        deadline: deadline ? new Date(deadline).toISOString() : null,
         completed: false
       });
       setTitle('');
       setDescription('');
+      setDeadline('');
       setIsExpanded(false);
     }
   };
@@ -43,6 +46,13 @@ function AddTodo({ onAdd }) {
               className="todo-textarea"
               rows="3"
             />
+            <input
+              type="datetime-local"
+              value={deadline}
+              onChange={(e) => setDeadline(e.target.value)}
+              placeholder="Deadline (optional)"
+              className="todo-input"
+            />
             <div className="form-actions">
               <button type="submit" className="btn-add">Add Todo</button>
               <button 
@@ -51,6 +61,7 @@ function AddTodo({ onAdd }) {
                   setIsExpanded(false);
                   setTitle('');
                   setDescription('');
+                  setDeadline('');
                 }}
                 className="btn-cancel-add"
               >

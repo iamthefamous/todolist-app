@@ -67,4 +67,13 @@ export const todoService = {
     }
     return response.json();
   },
+
+  // Get todos sorted by deadline
+  getTodosSortedByDeadline: async () => {
+    const response = await fetch(`${API_URL}?sortBy=deadline`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch todos sorted by deadline');
+    }
+    return response.json();
+  },
 };
