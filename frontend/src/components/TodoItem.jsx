@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './TodoItem.css';
 
-function TodoItem({ todo, onUpdate, onDelete }) {
+function TodoItem({ todo, onUpdate, onDelete, showGroup = false }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editDescription, setEditDescription] = useState(todo.description || '');
@@ -142,6 +142,9 @@ function TodoItem({ todo, onUpdate, onDelete }) {
           </div>
           {todo.description && (
             <p className="todo-description">{todo.description}</p>
+          )}
+          {showGroup && todo.group && (
+            <p className="todo-group">👥 Group: {todo.group.name}</p>
           )}
           {deadlineInfo && (
             <p className={`todo-deadline ${deadlineInfo.isOverdue ? 'overdue' : ''}`}>

@@ -49,11 +49,6 @@ function Groups() {
     }
   };
 
-  const handleLogout = () => {
-    authService.logout();
-    navigate('/login');
-  };
-
   return (
     <div className="groups-page">
       <div className="container">
@@ -61,14 +56,6 @@ function Groups() {
           <div className="header-content">
             <h1>👥 My Groups</h1>
             <p className="subtitle">Collaborate with your team</p>
-          </div>
-          <div className="header-actions">
-            <button onClick={() => navigate('/')} className="btn-secondary">
-              📝 Personal Todos
-            </button>
-            <button onClick={handleLogout} className="btn-logout">
-              Logout
-            </button>
           </div>
         </header>
 

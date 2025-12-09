@@ -85,6 +85,13 @@
   font-weight: 600;
 }
 
+.todo-group {
+  margin: 5px 0 0 0;
+  font-size: 13px;
+  color: #7c4dff;
+  font-weight: 500;
+}
+
 .todo-actions {
   display: flex;
   gap: 8px;
