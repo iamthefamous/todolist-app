@@ -67,11 +67,6 @@ function PersonalTodos() {
     }
   };
 
-  const handleLogout = () => {
-    authService.logout();
-    navigate('/login');
-  };
-
   const getFilteredTodos = () => {
     switch (filter) {
       case 'active':
@@ -94,14 +89,6 @@ function PersonalTodos() {
           <div className="header-content">
             <h1>📝 My Personal Todos</h1>
             <p className="subtitle">Hello, {user?.username}!</p>
-          </div>
-          <div className="header-actions">
-            <button onClick={() => navigate('/groups')} className="btn-secondary">
-              👥 Groups
-            </button>
-            <button onClick={handleLogout} className="btn-logout">
-              Logout
-            </button>
           </div>
         </header>
 
