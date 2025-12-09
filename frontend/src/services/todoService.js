@@ -1,9 +1,42 @@
+import authService from './authService';
+
 const API_URL = 'http://localhost:8080/api/todos';
 
+const getHeaders = () => {
+  return {
+    'Content-Type': 'application/json',
+    ...authService.getAuthHeader()
+  };
+};
+
 export const todoService = {
-  // Get all todos
-  getAllTodos: async () => {
-    const response = await fetch(API_URL);
+  // Get personal todos
+  getPersonalTodos: async () => {
+    const response = await fetch(`${API_URL}/personal`, {
+      headers: getHeaders()
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch personal todos');
+    }
+    return response.json();
+  },
+
+  // Get group todos
+  getGroupTodos: async (groupId) => {
+    const response = await fetch(`${API_URL}/group/${groupId}`, {
+      headers: getHeaders()
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch group todos');
+    }
+    return response.json();
+  },
+
+  // Get all user todos
+  getAllUserTodos: async () => {
+    const response = await fetch(API_URL, {
+      headers: getHeaders()
+    });
     if (!response.ok) {
       throw new Error('Failed to fetch todos');
     }
@@ -12,20 +45,20 @@ export const todoService = {
 
   // Get todo by id
   getTodoById: async (id) => {
-    const response = await fetch(`${API_URL}/${id}`);
+    const response = await fetch(`${API_URL}/${id}`, {
+      headers: getHeaders()
+    });
     if (!response.ok) {
       throw new Error('Failed to fetch todo');
     }
     return response.json();
   },
 
-  // Create new todo
-  createTodo: async (todo) => {
-    const response = await fetch(API_URL, {
+  // Create personal todo
+  createPersonalTodo: async (todo) => {
+    const response = await fetch(`${API_URL}/personal`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getHeaders(),
       body: JSON.stringify(todo),
     });
     if (!response.ok) {
@@ -34,13 +67,24 @@ export const todoService = {
     return response.json();
   },
 
+  // Create group todo
+  createGroupTodo: async (groupId, todo) => {
+    const response = await fetch(`${API_URL}/group/${groupId}`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(todo),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to create group todo');
+    }
+    return response.json();
+  },
+
   // Update todo
   updateTodo: async (id, todo) => {
     const response = await fetch(`${API_URL}/${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getHeaders(),
       body: JSON.stringify(todo),
     });
     if (!response.ok) {
@@ -53,26 +97,21 @@ export const todoService = {
   deleteTodo: async (id) => {
     const response = await fetch(`${API_URL}/${id}`, {
       method: 'DELETE',
+      headers: getHeaders(),
     });
     if (!response.ok) {
       throw new Error('Failed to delete todo');
     }
   },
 
-  // Get todos by status
-  getTodosByStatus: async (completed) => {
-    const response = await fetch(`${API_URL}?completed=${completed}`);
+  // Assign user to todo
+  assignUser: async (todoId, userId) => {
+    const response = await fetch(`${API_URL}/${todoId}/assign/${userId}`, {
+      method: 'POST',
+      headers: getHeaders(),
+    });
     if (!response.ok) {
-      throw new Error('Failed to fetch todos by status');
-    }
-    return response.json();
-  },
-
-  // Get todos sorted by deadline
-  getTodosSortedByDeadline: async () => {
-    const response = await fetch(`${API_URL}?sortBy=deadline`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch todos sorted by deadline');
+      throw new Error('Failed to assign user');
     }
     return response.json();
   },

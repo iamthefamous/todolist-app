@@ -2,6 +2,8 @@ package com.todolist.backend.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "todos")
@@ -26,8 +28,31 @@ public class Todo {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
-    @Column(name = "deadline")
+    @Column(name = "deadline", nullable = false)
     private LocalDateTime deadline;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Priority priority = Priority.MEDIUM;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"todos", "groups", "password"})
+    private User user;
+    
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"todos", "members"})
+    private Group group;
+    
+    @ManyToMany
+    @JoinTable(
+        name = "todo_assignments",
+        joinColumns = @JoinColumn(name = "todo_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"todos", "groups", "password"})
+    private Set<User> assignedUsers = new HashSet<>();
     
     @PrePersist
     protected void onCreate() {
@@ -43,9 +68,12 @@ public class Todo {
     // Constructors
     public Todo() {}
     
-    public Todo(String title, String description) {
+    public Todo(String title, String description, LocalDateTime deadline, Priority priority, User user) {
         this.title = title;
         this.description = description;
+        this.deadline = deadline;
+        this.priority = priority;
+        this.user = user;
         this.completed = false;
     }
     
@@ -104,5 +132,45 @@ public class Todo {
     
     public void setDeadline(LocalDateTime deadline) {
         this.deadline = deadline;
+    }
+    
+    public Priority getPriority() {
+        return priority;
+    }
+    
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+    
+    public User getUser() {
+        return user;
+    }
+    
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
+    public Group getGroup() {
+        return group;
+    }
+    
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+    
+    public Set<User> getAssignedUsers() {
+        return assignedUsers;
+    }
+    
+    public void setAssignedUsers(Set<User> assignedUsers) {
+        this.assignedUsers = assignedUsers;
+    }
+    
+    public void addAssignedUser(User user) {
+        this.assignedUsers.add(user);
+    }
+    
+    public void removeAssignedUser(User user) {
+        this.assignedUsers.remove(user);
     }
 }

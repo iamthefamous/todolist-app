@@ -8,6 +8,7 @@ function TodoItem({ todo, onUpdate, onDelete }) {
   const [editDeadline, setEditDeadline] = useState(
     todo.deadline ? new Date(todo.deadline).toISOString().slice(0, 16) : ''
   );
+  const [editPriority, setEditPriority] = useState(todo.priority || 'MEDIUM');
 
   const handleToggleComplete = () => {
     onUpdate(todo.id, {
@@ -17,12 +18,18 @@ function TodoItem({ todo, onUpdate, onDelete }) {
   };
 
   const handleSaveEdit = () => {
-    if (editTitle.trim()) {
+    if (editTitle.trim() && editDeadline) {
+      const deadlineDate = new Date(editDeadline);
+      if (isNaN(deadlineDate.getTime())) {
+        alert('Please enter a valid deadline');
+        return;
+      }
       onUpdate(todo.id, {
         ...todo,
         title: editTitle,
         description: editDescription,
-        deadline: editDeadline ? new Date(editDeadline).toISOString() : null
+        deadline: deadlineDate.toISOString(),
+        priority: editPriority
       });
       setIsEditing(false);
     }
@@ -34,7 +41,26 @@ function TodoItem({ todo, onUpdate, onDelete }) {
     setEditDeadline(
       todo.deadline ? new Date(todo.deadline).toISOString().slice(0, 16) : ''
     );
+    setEditPriority(todo.priority || 'MEDIUM');
     setIsEditing(false);
+  };
+  
+  const getPriorityColor = (priority) => {
+    switch(priority) {
+      case 'HIGH': return '#ff4444';
+      case 'MEDIUM': return '#44ff44';
+      case 'LOW': return '#4444ff';
+      default: return '#44ff44';
+    }
+  };
+  
+  const getPriorityLabel = (priority) => {
+    switch(priority) {
+      case 'HIGH': return '🔴 High';
+      case 'MEDIUM': return '🟢 Medium';
+      case 'LOW': return '🔵 Low';
+      default: return '🟢 Medium';
+    }
   };
 
   const formatDeadline = (deadline) => {
@@ -49,13 +75,14 @@ function TodoItem({ todo, onUpdate, onDelete }) {
 
   if (isEditing) {
     return (
-      <div className="todo-item editing">
+      <div className="todo-item editing" style={{ borderLeftColor: getPriorityColor(editPriority) }}>
         <input
           type="text"
           value={editTitle}
           onChange={(e) => setEditTitle(e.target.value)}
           className="edit-input"
           placeholder="Todo title"
+          required
         />
         <textarea
           value={editDescription}
@@ -69,8 +96,21 @@ function TodoItem({ todo, onUpdate, onDelete }) {
           value={editDeadline}
           onChange={(e) => setEditDeadline(e.target.value)}
           className="edit-input"
-          placeholder="Deadline (optional)"
+          placeholder="Deadline (required)"
+          required
         />
+        <div className="priority-selector">
+          <label>Priority:</label>
+          <select
+            value={editPriority}
+            onChange={(e) => setEditPriority(e.target.value)}
+            className="priority-select"
+          >
+            <option value="HIGH">🔴 High</option>
+            <option value="MEDIUM">🟢 Medium</option>
+            <option value="LOW">🔵 Low</option>
+          </select>
+        </div>
         <div className="edit-actions">
           <button onClick={handleSaveEdit} className="btn-save">Save</button>
           <button onClick={handleCancelEdit} className="btn-cancel">Cancel</button>
@@ -82,7 +122,10 @@ function TodoItem({ todo, onUpdate, onDelete }) {
   const deadlineInfo = formatDeadline(todo.deadline);
 
   return (
-    <div className={`todo-item ${todo.completed ? 'completed' : ''}`}>
+    <div 
+      className={`todo-item ${todo.completed ? 'completed' : ''}`}
+      style={{ borderLeftColor: getPriorityColor(todo.priority) }}
+    >
       <div className="todo-content">
         <input
           type="checkbox"
@@ -91,7 +134,12 @@ function TodoItem({ todo, onUpdate, onDelete }) {
           className="todo-checkbox"
         />
         <div className="todo-text">
-          <h3 className="todo-title">{todo.title}</h3>
+          <div className="todo-header">
+            <h3 className="todo-title">{todo.title}</h3>
+            <span className="priority-badge" style={{ backgroundColor: getPriorityColor(todo.priority) }}>
+              {getPriorityLabel(todo.priority)}
+            </span>
+          </div>
           {todo.description && (
             <p className="todo-description">{todo.description}</p>
           )}
