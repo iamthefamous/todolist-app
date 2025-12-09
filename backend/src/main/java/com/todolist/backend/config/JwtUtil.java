@@ -10,6 +10,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
     
+    // TODO: Move this to application.properties or environment variable in production
     private static final String SECRET_KEY = "MySecretKeyForJWTTokenGenerationAndValidation12345678901234567890";
     private static final long EXPIRATION_TIME = 86400000; // 24 hours
     

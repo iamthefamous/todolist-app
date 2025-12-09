@@ -87,8 +87,14 @@ public class TodoService {
             throw new RuntimeException("You must be a member of the group");
         }
         
-        User userToAssign = new User();
-        userToAssign.setId(userId);
+        // Fetch the user from repository to ensure it's a managed entity
+        User userToAssign = groupRepository.findById(todo.getGroup().getId())
+            .orElseThrow(() -> new RuntimeException("Group not found"))
+            .getMembers().stream()
+            .filter(u -> u.getId().equals(userId))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("User not found in group"));
+        
         todo.addAssignedUser(userToAssign);
         
         return todoRepository.save(todo);

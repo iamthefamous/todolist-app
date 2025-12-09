@@ -19,11 +19,16 @@ function TodoItem({ todo, onUpdate, onDelete }) {
 
   const handleSaveEdit = () => {
     if (editTitle.trim() && editDeadline) {
+      const deadlineDate = new Date(editDeadline);
+      if (isNaN(deadlineDate.getTime())) {
+        alert('Please enter a valid deadline');
+        return;
+      }
       onUpdate(todo.id, {
         ...todo,
         title: editTitle,
         description: editDescription,
-        deadline: new Date(editDeadline).toISOString(),
+        deadline: deadlineDate.toISOString(),
         priority: editPriority
       });
       setIsEditing(false);

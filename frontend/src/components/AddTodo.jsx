@@ -11,10 +11,15 @@ function AddTodo({ onAdd }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (title.trim() && deadline) {
+      const deadlineDate = new Date(deadline);
+      if (isNaN(deadlineDate.getTime())) {
+        alert('Please enter a valid deadline');
+        return;
+      }
       onAdd({
         title: title.trim(),
         description: description.trim(),
-        deadline: new Date(deadline).toISOString(),
+        deadline: deadlineDate.toISOString(),
         priority: priority,
         completed: false
       });
