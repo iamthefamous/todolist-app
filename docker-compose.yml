@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   mysql:
     image: mysql:8.0
     container_name: todolist-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: Asko2003.
       MYSQL_DATABASE: todolist_db
       MYSQL_USER: todouser
       MYSQL_PASSWORD: password
