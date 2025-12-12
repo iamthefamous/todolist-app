@@ -211,18 +211,28 @@ The application includes a Dockerfile for containerized deployment.
 
 ### Build the Docker image:
 
+First, build the JAR file:
+
 ```bash
 cd backend
+./gradlew clean build
+```
+
+Then build the Docker image:
+
+```bash
 docker build -t todolist-backend .
 ```
 
 ### Run with Docker Compose:
 
 ```bash
-docker-compose up --build
+docker-compose up
 ```
 
 This will start both PostgreSQL and the backend in containers.
+
+**Note:** For production deployments to Fly.io, you'll need to build the JAR locally first before deploying, as the Dockerfile uses the pre-built JAR file.
 
 ## 🔌 API Endpoints
 
