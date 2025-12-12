@@ -1,0 +1,30 @@
+# Build output
+build/
+target/
+*.jar
+*.war
+*.class
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Gradle wrapper (we copy it explicitly)
+.gradle/
+
+# Documentation
+*.md

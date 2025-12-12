@@ -10,25 +10,25 @@ This table stores all todo items with their details and status.
 
 | Column Name | Data Type | Constraints | Description |
 |------------|-----------|-------------|-------------|
-| id | BIGINT | PRIMARY KEY, AUTO_INCREMENT | Unique identifier for each todo |
+| id | BIGSERIAL | PRIMARY KEY | Unique identifier for each todo |
 | title | VARCHAR(255) | NOT NULL | The title/name of the todo item |
 | description | VARCHAR(1000) | NULL | Optional detailed description |
 | completed | BOOLEAN | NOT NULL, DEFAULT FALSE | Status of the todo (true=completed, false=active) |
-| created_at | DATETIME | NOT NULL | Timestamp when todo was created |
-| updated_at | DATETIME | NOT NULL | Timestamp when todo was last updated |
-| deadline | DATETIME | NULL | Optional deadline for the todo item |
+| created_at | TIMESTAMP | NOT NULL | Timestamp when todo was created |
+| updated_at | TIMESTAMP | NOT NULL | Timestamp when todo was last updated |
+| deadline | TIMESTAMP | NULL | Optional deadline for the todo item |
 
 #### SQL Schema
 
 ```sql
 CREATE TABLE todos (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description VARCHAR(1000),
     completed BOOLEAN NOT NULL DEFAULT FALSE,
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME NOT NULL,
-    deadline DATETIME,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    deadline TIMESTAMP,
     INDEX idx_completed (completed),
     INDEX idx_created_at (created_at),
     INDEX idx_deadline (deadline)
@@ -49,7 +49,7 @@ INSERT INTO todos (title, description, completed, created_at, updated_at, deadli
 VALUES 
     ('Learn Spring Boot', 'Complete Spring Boot tutorial with JPA', FALSE, NOW(), NOW(), '2025-12-15 18:00:00'),
     ('Build React App', 'Create a React application with Vite', FALSE, NOW(), NOW(), '2025-12-20 12:00:00'),
-    ('Setup MySQL', 'Install and configure MySQL database', TRUE, NOW(), NOW(), NULL);
+    ('Setup PostgreSQL', 'Install and configure PostgreSQL database', TRUE, NOW(), NOW(), NULL);
 ```
 
 ## Entity Relationships
@@ -106,19 +106,19 @@ public class Todo {
 
 ## Database Configuration
 
-The application uses the following MySQL configuration in `application.properties`:
+The application uses the following PostgreSQL configuration in `application.properties`:
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/todolist_db?createDatabaseIfNotExist=true
-spring.datasource.username=root
+spring.datasource.url=jdbc:postgresql://localhost:5432/todolist_db
+spring.datasource.username=todouser
 spring.datasource.password=password
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 ```
 
 ### Configuration Notes
 
-- **createDatabaseIfNotExist=true**: Automatically creates the database if it doesn't exist
 - **ddl-auto=update**: Automatically updates the schema based on entity changes
 - **show-sql=true**: Logs SQL queries to the console (useful for debugging)
 
@@ -127,13 +127,13 @@ spring.jpa.show-sql=true
 ### Backup Database
 
 ```bash
-mysqldump -u root -p todolist_db > todolist_backup.sql
+pg_dump -U todouser -d todolist_db > todolist_backup.sql
 ```
 
 ### Restore Database
 
 ```bash
-mysql -u root -p todolist_db < todolist_backup.sql
+psql -U todouser -d todolist_db < todolist_backup.sql
 ```
 
 ## Query Examples
