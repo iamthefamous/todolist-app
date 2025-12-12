@@ -1,6 +1,6 @@
 # 📝 TodoList Application
 
-A full-stack TodoList application built with **Vite + React** (frontend), **Java Spring Boot** (backend), and **MySQL** (database) for OOP and Web & Internet courses.
+A full-stack TodoList application built with **Vite + React** (frontend), **Java Spring Boot** (backend), and **PostgreSQL** (database) for OOP and Web & Internet courses.
 
 ## 🚀 Features
 
@@ -10,7 +10,7 @@ A full-stack TodoList application built with **Vite + React** (frontend), **Java
 - ✅ Filter todos (All, Active, Completed)
 - ✅ Responsive and modern UI
 - ✅ RESTful API architecture
-- ✅ MySQL database integration
+- ✅ PostgreSQL database integration
 - ✅ JPA/Hibernate for ORM
 
 ## 🏗️ Project Structure
@@ -45,33 +45,35 @@ Before running this application, make sure you have the following installed:
 - **Java 17** or higher
 - **Gradle 8.5+** (or use the included Gradle wrapper)
 - **Node.js 18+** and **npm**
-- **MySQL 8.0+** (or Docker to run MySQL in a container)
+- **PostgreSQL 14+** (or Docker to run PostgreSQL in a container)
 
 ## 🗄️ Database Setup
 
 ### Option 1: Using Docker (Recommended)
 
-The easiest way to run MySQL is using Docker:
+The easiest way to run PostgreSQL is using Docker:
 
 ```bash
 docker-compose up -d
 ```
 
-This will start MySQL on port 3306 with the database `todolist_db` already created.
+This will start PostgreSQL on port 5432 with the database `todolist_db` already created.
 
-### Option 2: Manual MySQL Installation
+### Option 2: Manual PostgreSQL Installation
 
-1. Install and start MySQL server
+1. Install and start PostgreSQL server
 
-2. Create the database (or let Spring Boot create it automatically):
+2. Create the database:
    ```sql
    CREATE DATABASE todolist_db;
+   CREATE USER todouser WITH PASSWORD 'password';
+   GRANT ALL PRIVILEGES ON DATABASE todolist_db TO todouser;
    ```
 
 3. Update database credentials in `backend/src/main/resources/application.properties`:
    ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/todolist_db?createDatabaseIfNotExist=true
-   spring.datasource.username=root
+   spring.datasource.url=jdbc:postgresql://localhost:5432/todolist_db
+   spring.datasource.username=todouser
    spring.datasource.password=your_password
    ```
 
@@ -139,6 +141,99 @@ For the easiest setup experience, use the provided shell scripts:
 
 4. Open your browser at `http://localhost:5173`
 
+## 🚀 Deployment to Fly.io
+
+This application is ready to be deployed to Fly.io using the provided Dockerfile.
+
+### Prerequisites
+
+1. Install the Fly CLI: https://fly.io/docs/hands-on/install-flyctl/
+2. Sign up for a Fly.io account: https://fly.io/app/sign-up
+
+### Deployment Steps
+
+1. **Login to Fly.io:**
+   ```bash
+   flyctl auth login
+   ```
+
+2. **Create a PostgreSQL database on Fly.io:**
+   ```bash
+   flyctl postgres create --name todolist-db --region iad
+   ```
+
+3. **Launch the application:**
+   ```bash
+   flyctl launch
+   ```
+   
+   This will use the `fly.toml` configuration file. When prompted:
+   - Choose your app name (or use the default)
+   - Select your region
+   - Don't create a database (we already created one)
+
+4. **Attach the database to your app:**
+   ```bash
+   flyctl postgres attach todolist-db
+   ```
+   
+   This will automatically set the DATABASE_URL environment variable.
+
+5. **Set additional environment variables (if needed):**
+   ```bash
+   flyctl secrets set JWT_SECRET=your-secret-key
+   ```
+
+6. **Deploy the application:**
+   ```bash
+   flyctl deploy
+   ```
+
+7. **Check the deployment status:**
+   ```bash
+   flyctl status
+   flyctl logs
+   ```
+
+Your application should now be available at `https://your-app-name.fly.dev`
+
+### Updating the Deployment
+
+To deploy changes:
+
+```bash
+flyctl deploy
+```
+
+## 🐳 Docker Deployment
+
+The application includes a Dockerfile for containerized deployment.
+
+### Build the Docker image:
+
+First, build the JAR file:
+
+```bash
+cd backend
+./gradlew clean build
+```
+
+Then build the Docker image:
+
+```bash
+docker build -t todolist-backend .
+```
+
+### Run with Docker Compose:
+
+```bash
+docker-compose up
+```
+
+This will start both PostgreSQL and the backend in containers.
+
+**Note:** For production deployments to Fly.io, you'll need to build the JAR locally first before deploying, as the Dockerfile uses the pre-built JAR file.
+
 ## 🔌 API Endpoints
 
 ### Todo Endpoints
@@ -194,7 +289,7 @@ For the easiest setup experience, use the provided shell scripts:
 - **Gradle** - Build tool and dependency management
 
 ### Database
-- **MySQL 8.0** - Relational database
+- **PostgreSQL 14+** - Relational database
 
 ## 🎨 Key Concepts Demonstrated
 
@@ -218,12 +313,11 @@ For the easiest setup experience, use the provided shell scripts:
 - The frontend runs on port `5173` (Vite default)
 - CORS is configured to allow requests from `http://localhost:5173`
 - JPA is set to `ddl-auto=update` for automatic schema generation
-- MySQL connection uses `createDatabaseIfNotExist=true`
 
 ## 🔧 Troubleshooting
 
 **Backend won't start:**
-- Check MySQL is running
+- Check PostgreSQL is running
 - Verify database credentials in `application.properties`
 - Ensure port 8080 is not in use
 
@@ -233,9 +327,9 @@ For the easiest setup experience, use the provided shell scripts:
 - Ensure API URL in `frontend/src/services/todoService.js` is correct
 
 **Database connection errors:**
-- Verify MySQL service is running
+- Verify PostgreSQL service is running
 - Check database name and credentials
-- Ensure MySQL driver is included in `build.gradle`
+- Ensure PostgreSQL driver is included in `build.gradle`
 
 ## 👨‍💻 Author
 
