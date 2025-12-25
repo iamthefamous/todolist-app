@@ -129,17 +129,29 @@ For the easiest setup experience, use the provided shell scripts:
    cd frontend
    ```
 
-2. Install dependencies:
+2. Create a `.env` file from the example:
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Edit `.env` to configure the backend API URL:
+   ```
+   VITE_API_URL=http://localhost:8080
+   ```
+   
+   For production, update this to your deployed backend URL (e.g., `https://todolist-python-api.fly.dev`)
+
+3. Install dependencies:
    ```bash
    npm install
    ```
 
-3. Start the development server:
+4. Start the development server:
    ```bash
    npm run dev
    ```
 
-4. Open your browser at `http://localhost:5173`
+5. Open your browser at `http://localhost:5173`
 
 ## 🚀 Deployment to Fly.io
 
@@ -313,6 +325,8 @@ This will start both PostgreSQL and the backend in containers.
 - The frontend runs on port `5173` (Vite default)
 - CORS is configured to allow requests from `http://localhost:5173`
 - JPA is set to `ddl-auto=update` for automatic schema generation
+- The frontend uses environment variables (`VITE_API_URL`) to configure the backend API URL
+- For production deployments, update the `VITE_API_URL` in the `.env` file
 
 ## 🔧 Troubleshooting
 
@@ -324,7 +338,8 @@ This will start both PostgreSQL and the backend in containers.
 **Frontend can't connect to backend:**
 - Verify backend is running on port 8080
 - Check browser console for CORS errors
-- Ensure API URL in `frontend/src/services/todoService.js` is correct
+- Ensure `VITE_API_URL` is correctly configured in `frontend/.env`
+- Verify that the `.env` file exists (copy from `.env.example` if needed)
 
 **Database connection errors:**
 - Verify PostgreSQL service is running
