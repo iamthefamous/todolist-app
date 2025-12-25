@@ -1,7 +1,8 @@
 import axios from 'axios';
 import authService from './authService';
+import API_BASE_URL from '../config/api';
 
-const API_URL = `${import.meta.env.VITE_API_URL}/api/groups`;
+const API_URL = `${API_BASE_URL}/api/groups`;
 
 class GroupService {
   async getAllGroups() {
