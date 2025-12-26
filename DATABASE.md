@@ -10,7 +10,7 @@ This table stores all todo items with their details and status.
 
 | Column Name | Data Type | Constraints | Description |
 |------------|-----------|-------------|-------------|
-| id | BIGSERIAL | PRIMARY KEY | Unique identifier for each todo |
+| id | BIGINT | PRIMARY KEY AUTO_INCREMENT | Unique identifier for each todo |
 | title | VARCHAR(255) | NOT NULL | The title/name of the todo item |
 | description | VARCHAR(1000) | NULL | Optional detailed description |
 | completed | BOOLEAN | NOT NULL, DEFAULT FALSE | Status of the todo (true=completed, false=active) |
@@ -22,7 +22,7 @@ This table stores all todo items with their details and status.
 
 ```sql
 CREATE TABLE todos (
-    id BIGSERIAL PRIMARY KEY,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
     description VARCHAR(1000),
     completed BOOLEAN NOT NULL DEFAULT FALSE,
@@ -49,7 +49,7 @@ INSERT INTO todos (title, description, completed, created_at, updated_at, deadli
 VALUES 
     ('Learn Spring Boot', 'Complete Spring Boot tutorial with JPA', FALSE, NOW(), NOW(), '2025-12-15 18:00:00'),
     ('Build React App', 'Create a React application with Vite', FALSE, NOW(), NOW(), '2025-12-20 12:00:00'),
-    ('Setup PostgreSQL', 'Install and configure PostgreSQL database', TRUE, NOW(), NOW(), NULL);
+    ('Setup MySQL', 'Install and configure MySQL database', TRUE, NOW(), NOW(), NULL);
 ```
 
 ## Entity Relationships
@@ -106,15 +106,15 @@ public class Todo {
 
 ## Database Configuration
 
-The application uses the following PostgreSQL configuration in `application.properties`:
+The application uses the following MySQL configuration in `application.properties`:
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/todolist_db
+spring.datasource.url=jdbc:mysql://localhost:3306/todolist_db
 spring.datasource.username=todouser
 spring.datasource.password=password
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
 ```
 
 ### Configuration Notes
@@ -127,13 +127,13 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 ### Backup Database
 
 ```bash
-pg_dump -U todouser -d todolist_db > todolist_backup.sql
+mysqldump -u todouser -p todolist_db > todolist_backup.sql
 ```
 
 ### Restore Database
 
 ```bash
-psql -U todouser -d todolist_db < todolist_backup.sql
+mysql -u todouser -p todolist_db < todolist_backup.sql
 ```
 
 ## Query Examples

@@ -1,10 +1,12 @@
-# fly.toml app configuration file generated for todolist-app-rough-violet-4489 on 2025-12-13T03:09:34+06:00
+# fly.toml app configuration file generated for backend-solitary-frost-5970 on 2025-12-13T03:12:57+06:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'todolist-app-rough-violet-4489'
+app = 'backend-solitary-frost-5970'
 primary_region = 'arn'
+
+[build]
 
 [http_service]
   internal_port = 8080

@@ -1,21 +1,23 @@
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: todolist-postgres
+  mysql:
+    image: mysql:8.0
+    container_name: todolist-mysql
     environment:
-      POSTGRES_USER: todouser
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: todolist_db
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: todolist_db
+      MYSQL_USER: todouser
+      MYSQL_PASSWORD: password
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U todouser -d todolist_db"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
 volumes:
-  postgres_data:
+  mysql_data:
     driver: local

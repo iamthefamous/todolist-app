@@ -1,6 +1,33 @@
 # 📝 TodoList Application
 
-A full-stack TodoList application built with **Vite + React** (frontend), **Java Spring Boot** (backend), and **PostgreSQL** (database) for OOP and Web & Internet courses.
+A full-stack TodoList application built with **Vite + React** (frontend), **Java Spring Boot** (backend), and **MySQL** (database) for OOP and Web & Internet courses.
+
+## 🚀 Quick Start
+
+### Using Shell Scripts (Recommended)
+
+1. **Start MySQL Database (Docker)**
+   ```bash
+   docker-compose up -d
+   ```
+
+2. **Start Backend Server**
+   ```bash
+   ./start-backend.sh
+   ```
+
+3. **Start Frontend Server** (in a new terminal)
+   ```bash
+   ./start-frontend.sh
+   ```
+
+4. **Access the Application**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:8080
+
+### Using Full Docker Setup (Optional)
+
+See [DOCKER_SETUP.md](DOCKER_SETUP.md) for running all services in containers.
 
 ## 🚀 Features
 
@@ -10,7 +37,7 @@ A full-stack TodoList application built with **Vite + React** (frontend), **Java
 - ✅ Filter todos (All, Active, Completed)
 - ✅ Responsive and modern UI
 - ✅ RESTful API architecture
-- ✅ PostgreSQL database integration
+- ✅ MySQL database integration
 - ✅ JPA/Hibernate for ORM
 
 ## 🏗️ Project Structure
@@ -51,29 +78,30 @@ Before running this application, make sure you have the following installed:
 - **Java 17** or higher
 - **Gradle 8.5+** (or use the included Gradle wrapper)
 - **Node.js 18+** and **npm**
-- **PostgreSQL 14+** (or Docker to run PostgreSQL in a container)
+- **MySQL 8.0+** (or Docker to run MySQL in a container)
 
 ## 🗄️ Database Setup
 
 ### Option 1: Using Docker (Recommended)
 
-The easiest way to run PostgreSQL is using Docker:
+The easiest way to run MySQL is using Docker:
 
 ```bash
 docker-compose up -d
 ```
 
-This will start PostgreSQL on port 5432 with the database `todolist_db` already created.
+This will start MySQL on port 3306 with the database `todolist_db` already created.
 
-### Option 2: Manual PostgreSQL Installation
+### Option 2: Manual MySQL Installation
 
-1. Install and start PostgreSQL server
+1. Install and start MySQL server
 
 2. Create the database:
    ```sql
    CREATE DATABASE todolist_db;
-   CREATE USER todouser WITH PASSWORD 'password';
-   GRANT ALL PRIVILEGES ON DATABASE todolist_db TO todouser;
+   CREATE USER 'todouser'@'localhost' IDENTIFIED BY 'password';
+   GRANT ALL PRIVILEGES ON todolist_db.* TO 'todouser'@'localhost';
+   FLUSH PRIVILEGES;
    ```
 
 3. Update database credentials in `backend/src/main/resources/application.properties`:

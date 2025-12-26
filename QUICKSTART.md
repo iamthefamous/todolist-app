@@ -7,7 +7,7 @@ This guide will help you get the TodoList application running locally in just a 
 Make sure you have these installed:
 - Java 17 or higher
 - Node.js 18+ and npm
-- Docker (for PostgreSQL database)
+- Docker (for MySQL database)
 
 ## Quick Start Steps
 
@@ -24,7 +24,7 @@ cd todolist-app
 docker compose up -d
 ```
 
-Wait a few seconds for PostgreSQL to start and become healthy.
+Wait a few seconds for MySQL to start and become healthy.
 
 ### 3. Start the backend
 
@@ -58,11 +58,11 @@ Open your browser and navigate to: **http://localhost:5173**
 You should see:
 - Backend running on: **http://localhost:8080**
 - Frontend running on: **http://localhost:5173**
-- PostgreSQL running on: **localhost:5432**
+- MySQL running on: **localhost:3306**
 
 ## What Just Happened?
 
-1. **PostgreSQL Database**: Started in a Docker container with the database `todolist_db` already configured
+1. **MySQL Database**: Started in a Docker container with the database `todolist_db` already configured
 2. **Spring Boot Backend**: Started on port 8080 with automatic database schema creation
 3. **React Frontend**: Started on port 5173 with Vite, configured to connect to the backend on port 8080
 
@@ -75,7 +75,7 @@ You should see:
 ## Troubleshooting
 
 ### Backend won't start
-- Make sure PostgreSQL is running: `docker ps`
+- Make sure MySQL is running: `docker ps`
 - Check port 8080 is not in use: `lsof -i :8080` (macOS/Linux)
 
 ### Frontend can't connect to backend

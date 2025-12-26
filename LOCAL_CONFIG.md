@@ -34,16 +34,15 @@ The backend uses Spring Boot's `application.properties` for configuration.
 # Server Configuration
 server.port=8080
 
-# PostgreSQL Database Configuration
-spring.datasource.url=jdbc:postgresql://localhost:5432/todolist_db
+# MySQL Database Configuration
+spring.datasource.url=jdbc:mysql://localhost:3306/todolist_db
 spring.datasource.username=todouser
 spring.datasource.password=password
-spring.datasource.driver-class-name=org.postgresql.Driver
 
 # JPA/Hibernate Configuration
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
 spring.jpa.properties.hibernate.format_sql=true
 
 # Application Name
@@ -63,15 +62,16 @@ spring.application.name=TodoList Backend
 
 ```yaml
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: todolist-postgres
+  mysql:
+    image: mysql:8.0
+    container_name: todolist-mysql
     environment:
-      POSTGRES_USER: todouser
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: todolist_db
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: todolist_db
+      MYSQL_USER: todouser
+      MYSQL_PASSWORD: password
     ports:
-      - "5432:5432"
+      - "3306:3306"
 ```
 
 **Usage**:
@@ -89,21 +89,16 @@ docker compose down
 docker compose down -v
 ```
 
-### Manual PostgreSQL Setup
+### Manual MySQL Setup
 
 If not using Docker:
 
 ```sql
 -- Create database and user
 CREATE DATABASE todolist_db;
-CREATE USER todouser WITH PASSWORD 'password';
-GRANT ALL PRIVILEGES ON DATABASE todolist_db TO todouser;
-
--- Connect to the database
-\c todolist_db
-
--- Grant schema privileges (PostgreSQL 15+)
-GRANT ALL ON SCHEMA public TO todouser;
+CREATE USER 'todouser'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON todolist_db.* TO 'todouser'@'localhost';
+FLUSH PRIVILEGES;
 ```
 
 Then update `backend/src/main/resources/application.properties` with your credentials.
@@ -116,7 +111,7 @@ Then update `backend/src/main/resources/application.properties` with your creden
 |------------|------|---------------------------------------------|
 | Frontend   | 5173 | `frontend/vite.config.js`                   |
 | Backend    | 8080 | `backend/.../application.properties`        |
-| PostgreSQL | 5432 | `docker-compose.yml`                        |
+| MySQL      | 3306 | `docker-compose.yml`                        |
 
 ### Changing Ports
 
@@ -142,16 +137,16 @@ Then update `frontend/.env`:
 VITE_API_URL=http://localhost:9090
 ```
 
-**PostgreSQL Port**:
+**MySQL Port**:
 Edit `docker-compose.yml`:
 ```yaml
 ports:
-  - "5433:5432"  # Maps container port 5432 to host port 5433
+  - "3307:3306"  # Maps container port 3306 to host port 3307
 ```
 
 Then update `backend/src/main/resources/application.properties`:
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5433/todolist_db
+spring.datasource.url=jdbc:mysql://localhost:3307/todolist_db
 ```
 
 ## CORS Configuration
@@ -170,7 +165,7 @@ The application uses Spring Security with CORS enabled for:
 
 - Frontend: `npm run dev` - Hot reload enabled
 - Backend: `./gradlew bootRun` - Spring Boot DevTools available
-- Database: Docker container with persistent volume
+- Database: MySQL Docker container with persistent volume
 - Environment: `.env` file with local URLs
 
 ### Production
@@ -183,13 +178,13 @@ The application uses Spring Security with CORS enabled for:
   - Build: `./gradlew clean build`
   - Run: `java -jar build/libs/todolist-backend-1.0.0.jar`
   - Use production database credentials
-- Database: Managed PostgreSQL service (e.g., Fly.io Postgres)
+- Database: Managed MySQL service (e.g., PlanetScale, AWS RDS)
 
 ## Verification Checklist
 
 After configuration, verify:
 
-- [ ] PostgreSQL container is running: `docker ps`
+- [ ] MySQL container is running: `docker ps`
 - [ ] Backend starts without errors: `./start-backend.sh`
 - [ ] Frontend starts without errors: `./start-frontend.sh`
 - [ ] Frontend can reach backend: Check browser console for API URL log
@@ -205,9 +200,9 @@ After configuration, verify:
 ### Issue: Backend can't connect to database
 
 **Solutions**:
-1. Verify PostgreSQL is running: `docker ps`
+1. Verify MySQL is running: `docker ps`
 2. Check credentials in `application.properties` match `docker-compose.yml`
-3. Ensure port 5432 is not blocked by firewall
+3. Ensure port 3306 is not blocked by firewall
 
 ### Issue: Changes to .env not reflected
 
@@ -239,4 +234,4 @@ After configuration, verify:
 
 - [Vite Environment Variables](https://vitejs.dev/guide/env-and-mode.html)
 - [Spring Boot Configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html)
-- [PostgreSQL Docker Hub](https://hub.docker.com/_/postgres)
+- [MySQL Docker Hub](https://hub.docker.com/_/mysql)
