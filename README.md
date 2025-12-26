@@ -38,6 +38,12 @@ todolist-app/
     └── package.json           # NPM dependencies
 ```
 
+## 🚀 Quick Start
+
+**Want to run this locally right now?** See **[QUICKSTART.md](QUICKSTART.md)** for a fast 5-minute setup guide!
+
+For detailed configuration options, see **[LOCAL_CONFIG.md](LOCAL_CONFIG.md)**.
+
 ## 📋 Prerequisites
 
 Before running this application, make sure you have the following installed:
