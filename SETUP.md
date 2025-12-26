@@ -9,7 +9,7 @@ git clone https://github.com/iamthefamous/todolist-app.git
 cd todolist-app
 ```
 
-### 2. Start MySQL Database
+### 2. Start PostgreSQL Database
 
 #### Option A: Using Docker (Recommended)
 
@@ -18,17 +18,17 @@ docker-compose up -d
 ```
 
 This will:
-- Pull the MySQL 8.0 image
-- Create a container named `todolist-mysql`
+- Pull the PostgreSQL 16 Alpine image
+- Create a container named `todolist-postgres`
 - Set up the `todolist_db` database
-- Expose MySQL on port 3306
+- Expose PostgreSQL on port 5432
 
-To check if MySQL is running:
+To check if PostgreSQL is running:
 ```bash
 docker ps
 ```
 
-To stop MySQL:
+To stop PostgreSQL:
 ```bash
 docker-compose down
 ```
@@ -38,13 +38,15 @@ To stop and remove all data:
 docker-compose down -v
 ```
 
-#### Option B: Local MySQL Installation
+#### Option B: Local PostgreSQL Installation
 
-1. Install MySQL 8.0 or higher
-2. Start MySQL service
+1. Install PostgreSQL 14 or higher
+2. Start PostgreSQL service
 3. Create database:
    ```sql
    CREATE DATABASE todolist_db;
+   CREATE USER todouser WITH PASSWORD 'password';
+   GRANT ALL PRIVILEGES ON DATABASE todolist_db TO todouser;
    ```
 4. Update credentials in `backend/src/main/resources/application.properties`
 
@@ -119,16 +121,16 @@ curl http://localhost:8080/api/todos
 ### Backend won't start
 
 **Error: "Communications link failure"**
-- MySQL is not running
-- Check: `docker ps` or verify local MySQL service
-- Solution: Start MySQL using `docker-compose up -d`
+- PostgreSQL is not running
+- Check: `docker ps` or verify local PostgreSQL service
+- Solution: Start PostgreSQL using `docker-compose up -d`
 
 **Error: "Port 8080 already in use"**
 - Another application is using port 8080
 - Solution: Stop the other application or change the port in `application.properties`
 
-**Error: "Access denied for user 'root'"**
-- Wrong MySQL credentials
+**Error: "Access denied for user 'todouser'"**
+- Wrong PostgreSQL credentials
 - Solution: Update username/password in `application.properties`
 
 ### Frontend won't start
@@ -166,12 +168,12 @@ Both frontend and backend support hot reload:
 #### View database content using Docker:
 
 ```bash
-docker exec -it todolist-mysql mysql -uroot -ppassword todolist_db
+docker exec -it todolist-postgres psql -U todouser -d todolist_db
 ```
 
 Then run SQL commands:
 ```sql
-SHOW TABLES;
+\dt
 SELECT * FROM todos;
 ```
 
@@ -236,10 +238,10 @@ If you encounter issues:
                                                        │ JDBC
                                                        ▼
                                                 ┌─────────────┐
-                                                │    MySQL    │
+                                                │ PostgreSQL  │
                                                 │  Database   │
                                                 │  localhost: │
-                                                │    3306     │
+                                                │    5432     │
                                                 └─────────────┘
 ```
 
