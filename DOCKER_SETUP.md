@@ -171,7 +171,7 @@ Set environment variables in Railway if you want different database credentials 
 - **First build**: Takes 5-10 minutes (downloads dependencies)
 - **Subsequent builds**: Much faster (cached layers)
 - **Startup time**: ~30 seconds for all services
-- **Memory usage**: Varies by workload and deployment environment (Railway sizing may differ).
+- **Memory usage**: Typically ~1GB total (Backend ~500MB, MySQL ~500MB), varies by workload and Railway sizing.
 
 ## Security Notes
 

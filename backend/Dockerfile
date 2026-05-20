@@ -29,6 +29,5 @@ RUN chmod +x /app/wait-for-mysql.sh && chown spring:spring /app/wait-for-mysql.s
 USER spring
 
 EXPOSE 8080
-ENV PORT=8080
 
 ENTRYPOINT ["/app/wait-for-mysql.sh"]
