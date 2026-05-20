@@ -1,16 +1,34 @@
+FROM eclipse-temurin:17-jdk-alpine AS build
+
+WORKDIR /app
+
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+
+RUN chmod +x gradlew
+RUN ./gradlew dependencies --no-daemon || true
+
+COPY src src
+
+RUN ./gradlew bootJar --no-daemon
+
 FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 
-# Add a non-root user (optional)
+RUN apk add --no-cache busybox-extras
 RUN addgroup -S spring && adduser -S spring -G spring
+
+COPY --from=build /app/build/libs/*.jar app.jar
+COPY wait-for-mysql.sh /app/wait-for-mysql.sh
+
+RUN chmod +x /app/wait-for-mysql.sh && chown spring:spring /app/wait-for-mysql.sh app.jar
+
 USER spring
 
-# Copy the jar
-COPY build/libs/*.jar app.jar
-
-# Set environment variable for Fly.io
+EXPOSE 8080
 ENV PORT=8080
 
-# Tell Spring Boot to use the Fly.io port and listen on all interfaces
-ENTRYPOINT ["java","-Dserver.address=0.0.0.0","-Dserver.port=${PORT}","-jar","app.jar"]
+ENTRYPOINT ["/app/wait-for-mysql.sh"]

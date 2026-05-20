@@ -1,22 +1,35 @@
 services:
   mysql:
     image: mysql:8.0
-    container_name: todolist-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: todolist_db
-      MYSQL_USER: todouser
-      MYSQL_PASSWORD: password
-    ports:
-      - "3306:3306"
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-todolist_db}
+      MYSQL_USER: ${MYSQL_USER:-todouser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpassword}"]
       interval: 10s
       timeout: 5s
       retries: 5
-    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      PORT: ${PORT:-8080}
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/todolist_db
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-todouser}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-password}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
 
 volumes:
   mysql_data:

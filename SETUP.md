@@ -14,7 +14,7 @@ cd todolist-app
 #### Option A: Using Docker (Recommended)
 
 ```bash
-docker-compose up -d
+docker-compose up -d mysql
 ```
 
 This will:

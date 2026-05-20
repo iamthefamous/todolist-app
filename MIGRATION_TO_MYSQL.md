@@ -51,7 +51,7 @@ Updated all documentation to reflect MySQL usage:
 
 1. **Start MySQL**:
    ```bash
-   docker-compose up -d
+   docker-compose up -d mysql
    ```
 
 2. **Start Backend**:

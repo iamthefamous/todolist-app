@@ -76,8 +76,8 @@ services:
 
 **Usage**:
 ```bash
-# Start database
-docker compose up -d
+# Start database only
+docker compose up -d mysql
 
 # Check status
 docker ps

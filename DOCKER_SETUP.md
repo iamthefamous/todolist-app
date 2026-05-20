@@ -2,7 +2,7 @@
 
 ## Quick Start with Docker
 
-Run the entire application (MySQL, Backend, Frontend) with a single command:
+Run the backend and MySQL database with a single command:
 
 ```bash
 docker-compose up -d
@@ -11,11 +11,9 @@ docker-compose up -d
 This will:
 1. Start MySQL 8.0 database on port 3306
 2. Build and start the Spring Boot backend on port 8080
-3. Build and start the React frontend with Nginx on port 3000
 
 ## Access the Application
 
-- **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8080
 - **MySQL Database**: localhost:3306
 
@@ -23,7 +21,6 @@ This will:
 
 ### MySQL
 - Image: `mysql:8.0`
-- Container: `todolist-mysql`
 - Port: 3306
 - Database: `todolist_db`
 - User: `todouser`
@@ -31,23 +28,20 @@ This will:
 
 ### Backend (Spring Boot)
 - Multi-stage build with Gradle
-- Container: `todolist-backend`
 - Port: 8080
 - Automatically connects to MySQL
 - Runs schema migrations on startup
-
-### Frontend (React + Nginx)
-- Multi-stage build (Node.js → Nginx)
-- Container: `todolist-frontend`
-- Port: 3000
-- Nginx serves built React app
-- API calls proxied to backend
 
 ## Docker Commands
 
 ### Start all services
 ```bash
 docker-compose up -d
+```
+
+### Start only the database
+```bash
+docker-compose up -d mysql
 ```
 
 ### View logs
@@ -57,7 +51,6 @@ docker-compose logs -f
 
 # Specific service
 docker-compose logs -f backend
-docker-compose logs -f frontend
 docker-compose logs -f mysql
 ```
 
@@ -84,19 +77,6 @@ docker-compose ps
 ## Architecture
 
 ```
-┌─────────────────┐
-│   Browser       │
-│  localhost:3000 │
-└────────┬────────┘
-         │
-         ↓
-┌─────────────────────────┐
-│   Frontend Container    │
-│   (Nginx + React)       │
-│   Port: 3000 → 80       │
-└────────┬────────────────┘
-         │ /api/* → backend
-         ↓
 ┌─────────────────────────┐
 │   Backend Container     │
 │   (Spring Boot)         │
@@ -118,6 +98,8 @@ The backend automatically uses these environment variables in Docker:
 - `SPRING_DATASOURCE_USERNAME`: todouser
 - `SPRING_DATASOURCE_PASSWORD`: password
 - `SPRING_JPA_HIBERNATE_DDL_AUTO`: update
+- `MYSQL_HOST`: mysql
+- `MYSQL_PORT`: 3306
 
 ## Volumes
 
@@ -125,7 +107,7 @@ The backend automatically uses these environment variables in Docker:
 
 ## Network
 
-All containers are connected via the `todolist-network` bridge network, allowing them to communicate using service names (e.g., `backend`, `mysql`).
+All services are connected via the default Docker network, allowing them to communicate using service names (e.g., `backend`, `mysql`).
 
 ## Troubleshooting
 
@@ -141,23 +123,14 @@ docker-compose logs mysql
 docker-compose restart backend
 ```
 
-### Frontend shows connection error
-```bash
-# Check if backend is running
-docker-compose logs backend
-
-# Verify nginx configuration
-docker exec -it todolist-frontend cat /etc/nginx/conf.d/default.conf
-```
-
 ### Port already in use
 ```bash
-# Find process using port 3000
-sudo lsof -i :3000
+# Find process using port 8080
+sudo lsof -i :8080
 
 # Or change port in docker-compose.yml
 ports:
-  - "3001:80"  # Change 3000 to 3001
+  - "8081:8080"  # Change 8080 to 8081
 ```
 
 ### Reset everything
@@ -166,7 +139,7 @@ ports:
 docker-compose down -v
 
 # Remove images
-docker rmi todolist-app-backend todolist-app-frontend
+docker rmi todolist-app-backend
 
 # Start fresh
 docker-compose up -d --build
@@ -189,16 +162,19 @@ The Dockerfiles are production-ready:
 - Health checks for reliability
 - Persistent volumes for data
 
+### Railway Deployment
+Railway can deploy the backend and database using this `docker-compose.yml`.
+Set environment variables in Railway if you want different database credentials or a custom `PORT`.
+
 ## Performance Notes
 
 - **First build**: Takes 5-10 minutes (downloads dependencies)
 - **Subsequent builds**: Much faster (cached layers)
 - **Startup time**: ~30 seconds for all services
-- **Memory usage**: ~1.5GB total (MySQL 500MB, Backend 500MB, Frontend 50MB)
+- **Memory usage**: ~1GB total (MySQL 500MB, Backend 500MB)
 
 ## Security Notes
 
 - Default passwords are used for development
 - In production, use strong passwords via environment variables
 - Database is only accessible from Docker network
-- Frontend uses Nginx best practices (gzip, caching)

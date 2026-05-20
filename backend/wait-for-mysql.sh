@@ -3,8 +3,8 @@
 
 set -e
 
-host="$1"
-port="$2"
+host="${MYSQL_HOST:-${1:-mysql}}"
+port="${MYSQL_PORT:-${2:-3306}}"
 
 echo "Waiting for MySQL at $host:$port..."
 

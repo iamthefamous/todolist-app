@@ -8,7 +8,7 @@ A full-stack TodoList application built with **Vite + React** (frontend), **Java
 
 1. **Start MySQL Database (Docker)**
    ```bash
-   docker-compose up -d
+   docker-compose up -d mysql
    ```
 
 2. **Start Backend Server**
@@ -87,7 +87,7 @@ Before running this application, make sure you have the following installed:
 The easiest way to run MySQL is using Docker:
 
 ```bash
-docker-compose up -d
+docker-compose up -d mysql
 ```
 
 This will start MySQL on port 3306 with the database `todolist_db` already created.
@@ -119,7 +119,7 @@ For the easiest setup experience, use the provided shell scripts:
 
 1. **Start the database** (if using Docker):
    ```bash
-   docker-compose up -d
+   docker-compose up -d mysql
    ```
 
 2. **Start the backend** (in one terminal):
