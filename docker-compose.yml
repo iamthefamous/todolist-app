@@ -22,7 +22,7 @@ services:
       PORT: ${PORT:-8080}
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/todolist_db
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-todolist_db}
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-todouser}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-password}
     depends_on:

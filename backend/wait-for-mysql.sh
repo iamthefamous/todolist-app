@@ -16,7 +16,7 @@ while [ $attempt -lt $max_attempts ]; do
     # Use timeout with nc to test if port is open
     if nc -z -w 1 "$host" "$port" 2>/dev/null; then
         echo "MySQL is up - starting application"
-        exec java -jar app.jar
+        exec java -Dserver.address=0.0.0.0 -Dserver.port=${PORT:-8080} -jar app.jar
     fi
     
     attempt=$((attempt + 1))
