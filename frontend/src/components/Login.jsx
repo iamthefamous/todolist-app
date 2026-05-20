@@ -3,6 +3,14 @@ import { useNavigate, Link } from 'react-router-dom';
 import authService from '../services/authService';
 import './Auth.css';
 
+function getErrorMessage(err, fallback) {
+  const payload = err?.response?.data;
+  if (typeof payload === 'string') return payload;
+  if (payload?.message) return payload.message;
+  if (payload?.error) return payload.error;
+  return fallback;
+}
+
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +27,7 @@ function Login() {
       await authService.login(username, password);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data || 'Login failed. Please check your credentials.');
+      setError(getErrorMessage(err, 'Login failed. Please check your credentials.'));
     } finally {
       setLoading(false);
     }

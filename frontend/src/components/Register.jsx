@@ -3,6 +3,14 @@ import { useNavigate, Link } from 'react-router-dom';
 import authService from '../services/authService';
 import './Auth.css';
 
+function getErrorMessage(err, fallback) {
+  const payload = err?.response?.data;
+  if (typeof payload === 'string') return payload;
+  if (payload?.message) return payload.message;
+  if (payload?.error) return payload.error;
+  return fallback;
+}
+
 function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -20,7 +28,7 @@ function Register() {
       await authService.register(username, password, email);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data || 'Registration failed. Please try again.');
+      setError(getErrorMessage(err, 'Registration failed. Please try again.'));
     } finally {
       setLoading(false);
     }
